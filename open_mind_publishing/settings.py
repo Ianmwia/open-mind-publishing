@@ -39,11 +39,19 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-
+    
+    #image storage
     'cloudinary_storage',
     'django.contrib.staticfiles',
     'cloudinary',
 
+    #allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.headless',
+
+    #apps
     'accounts'
 ]
 
@@ -56,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'open_mind_publishing.urls'
@@ -122,6 +131,19 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# Tell allauth to give you JWT tokens natively instead of browser session cookies
+ALLAUTH_HEADLESS_TOKEN_STRATEGY = "allauth.headless.tokens.jwt.JWTTokenStrategy"
+
+# The routes your frontend app uses to catch email verifies or password resets
+HEADLESS_FRONTEND_URLS = {
+    "account_confirm_email": "http://localhost:3000/verify-email/{key}",
+    "account_reset_password_from_key": "http://localhost:3000/password/reset/{key}",
+    "account_signup": "http://localhost:3000/signup",
+}
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
 
@@ -160,5 +182,16 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': config('CLOUDINARY_API_SECRET'),
 }
 
+# 2. Explicit fallback initialization for the lower-level uploader pipeline = cloudinary storage could not read image upload
+cloudinary.config(
+    cloud_name=config('CLOUDINARY_CLOUD_NAME'),
+    api_key=config('CLOUDINARY_API_KEY'),
+    api_secret=config('CLOUDINARY_API_SECRET'),
+    secure=True
+)
+
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_URL = '/media/'
+
+
+APPEND_SLASH = True
