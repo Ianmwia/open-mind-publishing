@@ -1,0 +1,13 @@
+[project]
+name = "open-mind-publishing"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "dj-database-url>=3.1.2",
+    "django>=6.1.1",
+    "django-ninja>=1.7.1",
+    "psycopg>=3.3.6",
+    "python-decouple>=3.8",
+]

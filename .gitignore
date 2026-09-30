@@ -1,0 +1,35 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+
+# Secret / Configuration Files
+.env
+
+# Databases (Crucial so you don't push your local data)
+*.sqlite3
+*.db
+
+# Django media and static collections
+/static/
+/staticfiles/
+/media/
+
+# Log files
+*.log
+
+# IDE and Editor configurations (VS Code & Cursor)
+.vscode/
+.history/
+*.code-workspace
+.idea/
+.DS_Store
