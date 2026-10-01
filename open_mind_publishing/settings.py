@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'allauth.headless',
 
     #apps
-    'accounts'
+    'accounts',
+    'projects',
 ]
 
 MIDDLEWARE = [
