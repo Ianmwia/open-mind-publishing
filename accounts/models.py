@@ -1,18 +1,50 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
 from cloudinary.models import CloudinaryField
 
-# Create your models here.
+
+class RoleName(models.TextChoices):
+    AUTHOR = 'author', 'Author'
+    FREELANCER = 'freelancer', 'Freelancer'
+    ILLUSTRATOR = 'illustrator', 'Illustrator'
+    TRANSLATOR = 'translator', 'Translator'
+    EDITOR = 'editor', 'Editor'
+    REVIEWER = 'reviewer', 'Reviewer'
+    PROJECT_MANAGER = 'project_manager', 'Project Manager'
+
+
+class Role(models.Model):
+    name = models.CharField(max_length=50, choices=RoleName.choices, unique=True)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.get_name_display()
+
+
 class CustomUser(AbstractUser):
-    '''
-    AbstractUser = add to django's existing tour own fields, only 1 class needed, can use the default user manager
-    AbstractBaseUser = create your own user model from scratch , no hand holding, must add a helper class to manage the user model, and add a custom user manager to handle the creation of users and superusers
-    '''
-    # custom table columns
+    # Multiple roles can be selected by/assigned to a user
+    roles = models.ManyToManyField(Role, related_name='users', blank=True)
+
+    # General profile fields
     bio = models.TextField(blank=True)
+    phone = models.CharField(max_length=50, blank=True)
     image = CloudinaryField('image', blank=True, null=True)
+    address = models.TextField(blank=True)
+
+    # Contributor & Author/Freelancer specifics
+    pen_name = models.CharField(max_length=255, blank=True, help_text="Public pen name or publishing alias")
+    specialties_or_languages = models.CharField(
+        max_length=255, 
+        blank=True, 
+        help_text="e.g. 'English to French Translation', 'Watercolor Storybook Art', 'Phonetics'"
+    )
+    portfolio_url = models.URLField(blank=True)
+    emergency_or_agent_contact = models.CharField(
+        max_length=255, 
+        blank=True, 
+        help_text="Agent, manager, or emergency contact info"
+    )
+
     timezone = models.CharField(max_length=30, default='UTC')
     is_custom = models.BooleanField(default=False)
     
@@ -24,5 +56,5 @@ class CustomUser(AbstractUser):
         return self.timezone == 'UTC'
 
     def __str__(self):
-        return self.username
-
+        display = self.pen_name if self.pen_name else self.username
+        return f"{display} ({self.email})" if self.email else display
