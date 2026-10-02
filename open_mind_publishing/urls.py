@@ -21,9 +21,7 @@ from .api import api  # <-- Import the main API instance
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-
     path('api/', api.urls),  # Mount the API routes
 
-    #app urls
-    path('accounts/', include('accounts.urls')),  # <-- Include the accounts app URLs
+    path("api/auth/", include("allauth.headless.urls"))
 ]

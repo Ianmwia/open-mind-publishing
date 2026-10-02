@@ -1,13 +1,15 @@
 # open_mind_publishing/api.py
 from ninja import NinjaAPI
-from accounts.api import router as accounts_router  # <-- Import the app router
+from accounts.api import router as accounts_router
+from projects.api import router as projects_router
 
 # The main entry point configuration
 api = NinjaAPI(
-    title="Open Mind Publishing API",
+    title="Open Mind Publishing Management API",
     version="1.0.0",
-    description="Main Root API Gateway"
+    description="Publishing Management System for Digital, Language, and Chart projects"
 )
 
-# Mount the accounts sub-router under the '/accounts' prefix
+# Mount sub-routers
 api.add_router("/accounts", accounts_router)
+api.add_router("/projects", projects_router)
