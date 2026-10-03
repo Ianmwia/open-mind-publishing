@@ -1,27 +1,51 @@
 """
 URL configuration for open_mind_publishing project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from .api import api  # <-- Import the main API instance
+from allauth.headless.account import views as headless_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('api/', api.urls),  # Mount the API routes
+    # Django Ninja API routes (accounts + projects)
+    path('api/', api.urls),
 
-    path("api/auth/", include("allauth.headless.urls"))
+    # ─── Allauth Headless Auth Endpoints (JWT) ───────────────────────────────
+    path(
+        'api/auth/login/',
+        headless_views.LoginView.as_api_view(client='app'),
+        name='api_login'
+    ),
+    path(
+        'api/auth/signup/',
+        headless_views.SignupView.as_api_view(client='app'),
+        name='api_signup'
+    ),
+    path(
+        'api/auth/session/',
+        headless_views.SessionView.as_api_view(client='app'),
+        name='api_session'
+    ),
+    path(
+        'api/auth/password/change/',
+        headless_views.ChangePasswordView.as_api_view(client='app'),
+        name='api_change_password'
+    ),
+    path(
+        'api/auth/password/request/',
+        headless_views.RequestPasswordResetView.as_api_view(client='app'),
+        name='api_request_password_reset'
+    ),
+    path(
+        'api/auth/password/reset/',
+        headless_views.ResetPasswordView.as_api_view(client='app'),
+        name='api_reset_password'
+    ),
+    path(
+        'api/auth/email/verify/',
+        headless_views.VerifyEmailView.as_api_view(client='app'),
+        name='api_verify_email'
+    ),
 ]

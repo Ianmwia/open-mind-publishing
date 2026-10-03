@@ -51,6 +51,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.headless',
 
+    #cors api
+    'corsheaders',
+
     #apps
     'accounts',
     'projects',
@@ -58,6 +61,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -116,6 +120,11 @@ if DATABASE_URL:
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
 
+
+# Tell allauth headless exactly where to look for the native JWT handler class
+ALLAUTH_HEADLESS_TOKEN_STRATEGY = "allauth.headless.tokens.jwt.JWTTokenStrategy"
+
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -134,16 +143,35 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-# Tell allauth to give you JWT tokens natively instead of browser session cookies
-ALLAUTH_HEADLESS_TOKEN_STRATEGY = "allauth.headless.tokens.jwt.JWTTokenStrategy"
+# Tell allauth to use JWT tokens instead of browser session cookies (headless mode)
+HEADLESS_TOKEN_STRATEGY = "allauth.headless.tokens.strategies.jwt.strategy.JWTTokenStrategy"
+
+# Use HS256 (HMAC-SHA256) so allauth signs JWTs with Django's SECRET_KEY.
+# RS256 (the default) requires a separate RSA private key file — use that in production.
+HEADLESS_JWT_ALGORITHM = "HS256"
 
 # The routes your frontend app uses to catch email verifies or password resets
 HEADLESS_FRONTEND_URLS = {
-    "account_confirm_email": "http://localhost:3000/verify-email/{key}",
-    "account_reset_password_from_key": "http://localhost:3000/password/reset/{key}",
-    "account_signup": "http://localhost:3000/signup",
+    "account_confirm_email": "http://localhost:5173/verify-email/{key}",
+    "account_reset_password_from_key": "http://localhost:5173/password/reset/{key}",
+    "account_signup": "http://localhost:5173/signup",
 }
 
+#cors api
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+
+CORS_ALLOW_ALL_ORIGINS = False #not all urls can access this backend
+
+CORS_ALLOW_HEADERS = (
+    "accept",
+    "authorization",
+    "content-type",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
