@@ -151,12 +151,14 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend', # Required for allauth
 ]
 
-# Option A: Allow users to log in with EITHER their username or their email address
-ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+# Updated for newer django-allauth packages
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}
 
 
-# 3. Additional highly recommended email settings for allauth:
-ACCOUNT_EMAIL_REQUIRED = True         # Users must provide an email when signing up
+
+# Replaces old account field requirement settings clean
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+
 ACCOUNT_UNIQUE_EMAIL = True           
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
