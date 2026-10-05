@@ -32,13 +32,13 @@ def list_roles(request):
 # --- PROFILE CRUD ENDPOINTS ---
 
 # 1. READ Profile Info
-@router.get("/get_profile", auth=[jwt_token_auth], response=UserOutSchema)
+@router.get("/get_profile/", auth=[jwt_token_auth], response=UserOutSchema)
 def get_my_profile(request):
     return request.user
 
 
 # 2. UPDATE Profile Info & Selected Roles
-@router.patch("/update_profile", auth=[jwt_token_auth], response=UserOutSchema)
+@router.patch("/update_profile/", auth=[jwt_token_auth], response=UserOutSchema)
 def update_my_profile(request, data: UserPatchSchema):
     user = request.user
     patch_dict = data.dict(exclude_unset=True)
@@ -83,7 +83,7 @@ def get_user_detail(request, user_id: int):
 
 
 # 4. DELETE Account 
-@router.delete("/delete_account", auth=[jwt_token_auth], response={200: dict})
+@router.delete("/delete_account/", auth=[jwt_token_auth], response={200: dict})
 def delete_my_account(request):
     user = request.user
     user.delete()
