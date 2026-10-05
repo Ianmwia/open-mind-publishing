@@ -183,7 +183,7 @@ HEADLESS_FRONTEND_URLS = {
 #cors api
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "http://[IP_ADDRESS]",
+    "http://127.0.0.1:5173",
     "https://open-mind-publishing-frontend.vercel.app",
 ]
 
