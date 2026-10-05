@@ -48,9 +48,4 @@ urlpatterns = [
         headless_views.VerifyEmailView.as_api_view(client='app'),
         name='api_verify_email'
     ),
-    path(
-        'api/auth/logout/',
-        headless_views.LogoutView.as_api_view(client='app'),
-        name='api_logout'
-    ),
 ]
