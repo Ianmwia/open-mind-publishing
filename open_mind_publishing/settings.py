@@ -28,7 +28,11 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "open-mind-publishing.onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 
 
 # Application definition
@@ -141,6 +145,20 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Add django-allauth's specific backend for checking credentials
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend', # Keeps your Django admin working
+    'allauth.account.auth_backends.AuthenticationBackend', # Required for allauth
+]
+
+# Option A: Allow users to log in with EITHER their username or their email address
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+
+
+# 3. Additional highly recommended email settings for allauth:
+ACCOUNT_EMAIL_REQUIRED = True         # Users must provide an email when signing up
+ACCOUNT_UNIQUE_EMAIL = True           
+
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # Tell allauth to use JWT tokens instead of browser session cookies (headless mode)
@@ -150,17 +168,26 @@ HEADLESS_TOKEN_STRATEGY = "allauth.headless.tokens.strategies.jwt.strategy.JWTTo
 # RS256 (the default) requires a separate RSA private key file — use that in production.
 HEADLESS_JWT_ALGORITHM = "HS256"
 
+if not DEBUG:
+    FRONTEND_BASE_URL =  "https://open-mind-publishing-frontend.vercel.app/"
+else:
+    FRONTEND_BASE_URL = "http://localhost:5173"
+
 # The routes your frontend app uses to catch email verifies or password resets
 HEADLESS_FRONTEND_URLS = {
-    "account_confirm_email": "http://localhost:5173/verify-email/{key}",
-    "account_reset_password_from_key": "http://localhost:5173/password/reset/{key}",
-    "account_signup": "http://localhost:5173/signup",
+    "account_confirm_email": f"{FRONTEND_BASE_URL}/verify-email/{{key}}",
+    "account_reset_password_from_key": f"{FRONTEND_BASE_URL}/password/reset/{{key}}",
+    "account_signup": f"{FRONTEND_BASE_URL}/signup",
 }
 
 #cors api
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "http://[IP_ADDRESS]",
+    "https://open-mind-publishing-frontend.vercel.app",
 ]
+
+CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_ALL_ORIGINS = False #not all urls can access this backend
 
