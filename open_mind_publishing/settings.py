@@ -109,7 +109,7 @@ DATABASES = {
 # 2. Automatically override if a DATABASE_URL environment variable is provided (Production)
 DATABASE_URL = config('DATABASE_URL', default=None)
 
-if DATABASE_URL:
+if DATABASE_URL and not DEBUG:
     DATABASES['default'] = dj_database_url.config(
         default=DATABASE_URL,
         conn_max_age=600,
