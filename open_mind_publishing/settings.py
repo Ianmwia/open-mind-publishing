@@ -152,14 +152,19 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Updated for newer django-allauth packages
-ACCOUNT_LOGIN_METHODS = {'email', 'username'}
+# Use only email for login to avoid 400 errors with headless mode
+ACCOUNT_LOGIN_METHODS = {'email'}
 
 
 
 # Replaces old account field requirement settings clean
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 
-ACCOUNT_UNIQUE_EMAIL = True           
+ACCOUNT_UNIQUE_EMAIL = True
+
+# Required for headless API to work properly
+ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
