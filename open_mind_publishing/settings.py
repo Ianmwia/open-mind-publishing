@@ -163,9 +163,6 @@ ACCOUNT_UNIQUE_EMAIL = True
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-# Tell allauth to use JWT tokens instead of browser session cookies (headless mode)
-HEADLESS_TOKEN_STRATEGY = "allauth.headless.tokens.strategies.jwt.strategy.JWTTokenStrategy"
-
 # Use HS256 (HMAC-SHA256) so allauth signs JWTs with Django's SECRET_KEY.
 # RS256 (the default) requires a separate RSA private key file — use that in production.
 HEADLESS_JWT_ALGORITHM = "HS256"
