@@ -11,10 +11,12 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('excel_file', type=str, help='Path to Excel file')
         parser.add_argument('--admin-username', type=str, default='admin', help='Username to assign as created_by')
+        parser.add_argument('--default-password', type=str, default='changeme123', help='Default password for newly created users')
 
     def handle(self, *args, **options):
         excel_file = options['excel_file']
         admin_username = options['admin_username']
+        default_password = options['default_password']
 
         self.stdout.write(f'Reading Excel file: {excel_file}')
 
@@ -38,7 +40,7 @@ class Command(BaseCommand):
             admin_user = CustomUser.objects.create_user(
                 username=admin_username,
                 email=f'{admin_username}@openmind.com',
-                password='temp123',  # Change this after import
+                password=default_password,
                 is_staff=True,
                 is_superuser=True
             )
@@ -128,7 +130,7 @@ class Command(BaseCommand):
                                 user = CustomUser.objects.create_user(
                                     username=username,
                                     email=f'{username}@openmind.com',
-                                    password='temp123',  # Users will need to reset
+                                    password=default_password,
                                     pen_name=author_name
                                 )
                                 self.stdout.write(self.style.SUCCESS(f'Created user: {author_name} ({username})'))
