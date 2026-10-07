@@ -125,8 +125,8 @@ if DATABASE_URL:
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
 
 
-# Tell allauth headless exactly where to look for the native JWT handler class
-ALLAUTH_HEADLESS_TOKEN_STRATEGY = "allauth.headless.tokens.jwt.JWTTokenStrategy"
+# Tell allauth headless to use JWT tokens instead of session tokens
+HEADLESS_TOKEN_STRATEGY = "allauth.headless.tokens.strategies.jwt.strategy.JWTTokenStrategy"
 
 
 AUTH_PASSWORD_VALIDATORS = [
