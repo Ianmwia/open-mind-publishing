@@ -34,6 +34,14 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
 ]
 
+# Cache configuration for sessions (memory-based, no database storage)
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
 
 # Application definition
 
@@ -119,6 +127,10 @@ if DATABASE_URL:
     # so connections don't drop when your database scales down to zero
     DATABASES['default']['CONN_HEALTH_CHECKS'] = True
 
+# Use cache-based sessions instead of database sessions (for headless API)
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
+
 #**leave database_url out of local env, only add it in the live servers env like render
 
 # Password validation
@@ -163,14 +175,16 @@ ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_UNIQUE_EMAIL = True
 
 # Required for headless API to work properly
-ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_SESSION_REMEMBER = False  # Disable session storage for headless API
 ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-# Use HS256 (HMAC-SHA256) so allauth signs JWTs with Django's SECRET_KEY.
-# RS256 (the default) requires a separate RSA private key file — use that in production.
+# JWT Token Strategy Configuration - truly stateless
+HEADLESS_TOKEN_STRATEGY = "allauth.headless.tokens.strategies.jwt.strategy.JWTTokenStrategy"
 HEADLESS_JWT_ALGORITHM = "HS256"
+HEADLESS_JWT_STATEFUL_VALIDATION_ENABLED = False  # Don't check session validity for JWT (truly stateless)
+HEADLESS_JWT_ACCESS_TOKEN_EXPIRES = 300  # 5 minutes (frontend will handle refresh token rotation)
 
 if not DEBUG:
     FRONTEND_BASE_URL =  "https://open-mind-publishing-frontend.vercel.app/"
