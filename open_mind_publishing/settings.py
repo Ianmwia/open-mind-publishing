@@ -185,6 +185,8 @@ HEADLESS_TOKEN_STRATEGY = "allauth.headless.tokens.strategies.jwt.strategy.JWTTo
 HEADLESS_JWT_ALGORITHM = "HS256"
 HEADLESS_JWT_STATEFUL_VALIDATION_ENABLED = False  # Don't check session validity for JWT (truly stateless)
 HEADLESS_JWT_ACCESS_TOKEN_EXPIRES = 300  # 5 minutes (frontend will handle refresh token rotation)
+HEADLESS_JWT_REFRESH_TOKEN_EXPIRES = 2592000  # 30 days
+HEADLESS_JWT_ROTATE_REFRESH_TOKEN = True  # Generate new refresh token on each refresh
 
 if not DEBUG:
     FRONTEND_BASE_URL =  "https://open-mind-publishing-frontend.vercel.app/"
